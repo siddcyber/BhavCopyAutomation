@@ -1,6 +1,5 @@
 from tkinter import filedialog, Label, Checkbutton, IntVar, Tk, Button, ttk, Scrollbar, LabelFrame
 import os.path
-import pandas as pd
 
 
 #  function to create shortcut in the specified path for the BhavCopyAutoDownloader.exe
@@ -17,7 +16,7 @@ def createShortcut(path, target='', wDir='', icon=''):
     shortcut.save()
 
 
-# function to cbeck if BhavCopy_location.txt file is located or  not
+# function to check if BhavCopy_location.txt file is located or  not
 def CheckOrignalFilePath():
     import winshell
     if os.path.exists(os.getcwd() + '\\' + 'BhavCopy_location.txt'):
@@ -73,26 +72,26 @@ def CheckStartupFile():
     return filePresent
 
 
-# def ShowExcel():
-#         import pandas as pd
-#         Dataset = pd.read_csv('Sample_BhavCopy.csv')
-#         treeframe = LabelFrame(window)
-#         treeframe.grid(row=1,column=0, sticky='EW', columnspan=2, ipady=60)
-#         tv1 = ttk.Treeview(treeframe)
-#         tv1.place(relheight=1, relwidth=1)
-#         treescrolly = Scrollbar(treeframe, orient="vertical", command=tv1.yview)
-#         treescrollx = Scrollbar(treeframe, orient="horizontal", command=tv1.xview)
-#         tv1.configure(xscrollcommand=treescrollx.set, yscrollcommand=treescrolly.set)
-#         treescrollx.pack(side="bottom", fill="x")
-#         treescrolly.pack(side="right", fill="y")
-#         tv1["column"] = list(Dataset.columns)
-#         tv1["show"] = "headings"
-#         for columns in tv1["column"]:
-#             tv1.heading(columns, text=columns)
-#         df_rows = Dataset.to_numpy().tolist()
-#         for row in df_rows:
-#             tv1.insert("","end",value=row)
-
+def ShowExcel():
+        import pandas as pd
+        Dataset = pd.read_csv('Sample_BhavCopy.csv').head()
+        treeframe = LabelFrame(window)
+        treeframe.grid(row=1, column=0, sticky='EW', columnspan=100, ipady=60)
+        tv1 = ttk.Treeview(treeframe)
+        tv1.place(relheight=1, relwidth=1)
+        treescrolly = Scrollbar(treeframe, orient="vertical", command=tv1.yview)
+        treescrollx = Scrollbar(treeframe, orient="horizontal", command=tv1.xview)
+        tv1.configure(xscrollcommand=treescrollx.set, yscrollcommand=treescrolly.set)
+        treescrollx.pack(side="bottom", fill="x")
+        treescrolly.pack(side="right", fill="y")
+        tv1["column"] = list(Dataset.columns)
+        tv1["show"] = "headings"
+        for columns in tv1["column"]:
+            tv1.heading(columns, text=columns)
+        df_rows = Dataset.to_numpy().tolist()
+        for row in df_rows:
+            tv1.insert("", "end", values=row)
+        window.update()
 
 
 window = Tk()
@@ -110,23 +109,6 @@ if CheckStartupFile():
     startupTrue.select()
 else:
     pass
-Dataset = pd.read_csv('Sample_BhavCopy.csv').head()
-treeframe = LabelFrame(window)
-treeframe.grid(row=1, column=0, sticky='EW', columnspan=100, ipady=60)
-tv1 = ttk.Treeview(treeframe)
-tv1.place(relheight=1, relwidth=1)
-treescrolly = Scrollbar(treeframe, orient="vertical", command=tv1.yview)
-treescrollx = Scrollbar(treeframe, orient="horizontal", command=tv1.xview)
-tv1.configure(xscrollcommand=treescrollx.set, yscrollcommand=treescrolly.set)
-treescrollx.pack(side="bottom", fill="x")
-treescrolly.pack(side="right", fill="y")
-tv1["column"] = list(Dataset.columns)
-tv1["show"] = "headings"
-for columns in tv1["column"]:
-    tv1.heading(columns, text=columns)
-df_rows = Dataset.to_numpy().tolist()
-for row in df_rows:
-    tv1.insert("","end",values=row)
 
 exitButton = Button(window, text='Save and Exit', command=StartupFunctionAndExit)
 # change to grid
