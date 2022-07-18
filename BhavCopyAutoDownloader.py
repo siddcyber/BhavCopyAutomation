@@ -12,6 +12,8 @@ from nsepy.history import get_price_list
 # saturday  -> friday   ->5
 # sunday    -> friday   ->6
 
+#  Add try except statements to check if internet works if not retry after 1 minute
+#  and convert code into class(if possible)
 with open((os.getcwd() + "\BhavCopy_location.txt"), 'r') as file:
     path = str(file.readline())
 
