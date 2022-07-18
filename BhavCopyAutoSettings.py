@@ -1,6 +1,7 @@
+# install pywin32, future, nsepy and winshell
+
 from tkinter import filedialog, Label, Checkbutton, IntVar, Tk, Button, ttk, Scrollbar, LabelFrame
 import os.path
-
 
 #  function to create shortcut in the specified path for the BhavCopyAutoDownloader.exe
 def createShortcut(path, target='', wDir='', icon=''):

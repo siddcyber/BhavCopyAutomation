@@ -1,3 +1,5 @@
+# install pywin32, future, nsepy and winshell
+
 import os
 from datetime import date, datetime, timedelta
 from nsepy.history import get_price_list
