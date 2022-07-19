@@ -4,8 +4,6 @@ import os
 from datetime import date, datetime, timedelta
 import requests
 
-# file opens after 5 minutes of startup, asks user to edit file (provide auto edit option, ask first time for auto edit)
-
 # monday    -> friday   ->0
 # tuesday   -> monday   ->1
 # wednesday -> tuesday  ->2
@@ -56,5 +54,15 @@ response = requests.get(URL)
 open(str("cm" + nameDateYesterday.strftime("%d%b%Y").upper() + 'bhav.csv.zip'), "wb").write(response.content)
 
 # extract zip file to specified location
+import zipfile
+def un_zipFiles(path):
+    files=os.listdir(path)
+    for file in files:
+        if file.endswith('.zip'):
+            filePath=path+'/'+file
+            zip_file = zipfile.ZipFile(filePath)
+            for names in zip_file.namelist():
+                zip_file.extract(names,path)
+            zip_file.close()
 
 #  delete the zip file
