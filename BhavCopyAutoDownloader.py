@@ -1,8 +1,9 @@
 # install pywin32, future, nsepy and winshell
 
 import os
-from datetime import date, datetime, timedelta
 import requests
+from datetime import date, datetime, timedelta
+from zipfile import ZipFile
 
 # monday    -> friday   ->0
 # tuesday   -> monday   ->1
@@ -28,41 +29,36 @@ with open((os.getcwd() + "\BhavCopy_location.txt"), 'r') as file:
 today = date.today()  # today's date
 nameDateToday = datetime.today()  # today's date for file naming
 
-
 if today.weekday() == 6:
     nameDateYesterday = nameDateToday - timedelta(days=2)  # Friday's date for file naming
-    # saving of file in CSV format with name
 
 elif today.weekday() == 0:
     nameDateYesterday = nameDateToday - timedelta(days=3)  # Friday's date for file naming
-    # saving of file in CSV format with name
 
 else:
     nameDateYesterday = nameDateToday - timedelta(days=1)  # Yesterday's date for file naming
-    # saving of file in CSV format with name
+
+#  Name of the zip file to be downloaded
+zipname = str("cm" + nameDateYesterday.strftime("%d%b%Y").upper() + 'bhav.csv.zip')
+
+# URL = "https://archives.nseindia.com/content/historical/EQUITIES/" + \
+#       str(nameDateYesterday.strftime("%Y") + "/" + nameDateYesterday.strftime("%b").upper() + "/cm" +
+#           nameDateYesterday.strftime("%d%b%Y").upper()) + 'bhav.csv.zip'
+
+URL2 = "https://archives.nseindia.com/content/historical/EQUITIES/" + \
+      str(nameDateYesterday.strftime("%Y") + "/" + nameDateYesterday.strftime("%b").upper()) + '/' + zipname
 
 
-URL = "https://archives.nseindia.com/content/historical/EQUITIES/" + \
-      str(nameDateYesterday.strftime("%Y")+"/" + nameDateYesterday.strftime("%b").upper() + "/cm" +
-          nameDateYesterday.strftime("%d%b%Y").upper()) + 'bhav.csv.zip'
+try:
+    response = requests.get(URL2)  # download the data behind the URL
+    open(zipname, "wb").write(response.content)  # Open the response into a new file
+    # extract zip file to specified location
+    with ZipFile(zipname, 'r') as zip_file:
+        zip_file.extractall(path=path)
+    os.remove(zipname)  # removes the downloaded zip file
+    print("itworks")
+except (requests.exceptions.ConnectionError, FileNotFoundError):
+    print("maybe now")
 
 
-# 2. download the data behind the URL
-response = requests.get(URL)
 
-# 3. Open the response into a new file called instagram.ico
-open(str("cm" + nameDateYesterday.strftime("%d%b%Y").upper() + 'bhav.csv.zip'), "wb").write(response.content)
-
-# extract zip file to specified location
-import zipfile
-def un_zipFiles(path):
-    files=os.listdir(path)
-    for file in files:
-        if file.endswith('.zip'):
-            filePath=path+'/'+file
-            zip_file = zipfile.ZipFile(filePath)
-            for names in zip_file.namelist():
-                zip_file.extract(names,path)
-            zip_file.close()
-
-#  delete the zip file
