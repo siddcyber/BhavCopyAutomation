@@ -98,7 +98,7 @@ window.title("BhavCopy Download Automation Settings GUI")
 window.iconbitmap('BhavCopyLogo.ico')
 
 window.columnconfigure(index=0, weight=1)
-# window.rowconfigure(index, weight)
+window.rowconfigure(index=3, weight=1)
 
 heading = Label(window, text="BhavCopy Download Automation Settings", relief='raised', background="White")
 sampleHeading = Label(window, text="\nSample Downloaded NSE Bhav Copy:", background="White")
@@ -143,7 +143,7 @@ changeOnHover(exitButton, "Light Gray", "White")
 
 # change to grid
 heading.grid(row=0, column=0, sticky='NSEW')
-sampleHeading.grid(row=2, column=0)
+sampleHeading.grid(row=2, column=0, sticky='NSEW')
 treeframe.grid(row=3, column=0, sticky='EW', ipady=60)
 
 browserFrame.grid(row=4, column=0, sticky='EW')
