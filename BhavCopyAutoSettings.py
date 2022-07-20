@@ -1,8 +1,9 @@
 # install pywin32, future, nsepy and winshell
 
-from tkinter import filedialog, Label, Checkbutton, IntVar, Tk, Button, ttk, Scrollbar, LabelFrame, Grid
+from tkinter import filedialog, Label, Checkbutton, IntVar, Tk, Button, ttk, Scrollbar, LabelFrame
 import os.path
 import pandas as pd
+
 
 #  function to create shortcut in the specified path for the BhavCopyAutoDownloader.exe
 def createShortcut(path, target='', wDir='', icon=''):
@@ -46,9 +47,9 @@ def BrowseFile():
     filename = filedialog.askdirectory(initialdir=str(CheckOrignalFilePath()), title="select the folder")
     labelFilename.configure(text=filename)  # reconfigures the Filename label with new location in GUI
 
-    newPath = open(os.getcwd() + '\\' + 'BhavCopy_location.txt', 'w')   # opens txt file in write mode
-    newPath.truncate(0)                                                 # erase all the contents of the file
-    newPath.write(str(labelFilename.cget('text')))                      # append the file with new location
+    newPath = open(os.getcwd() + '\\' + 'BhavCopy_location.txt', 'w')  # opens txt file in write mode
+    newPath.truncate(0)  # erase all the contents of the file
+    newPath.write(str(labelFilename.cget('text')))  # append the file with new location
     newPath.close()
 
 
@@ -68,9 +69,9 @@ def StartupFunctionAndExit():
         startupPath = r'C:\Users\%s\AppData\Roaming\Microsoft\Windows\Start ' \
                       r'Menu\Programs\Startup\BhavCopyAutoDownloader.lnk' % USER_NAME
         try:
-            os.remove(startupPath)              # removes shortcut if unselected
+            os.remove(startupPath)  # removes shortcut if unselected
         except FileNotFoundError:
-            pass                                # handles exception in case file was no found(deleted/never made)
+            pass  # handles exception in case file was no found(deleted/never made)
         window.destroy()
 
 
@@ -98,15 +99,15 @@ window.iconbitmap('BhavCopyLogo.ico')
 window.columnconfigure(index=0, weight=1)
 # window.rowconfigure(index, weight)
 
-heading = Label(window, text="BhavCopy Download Automation Settings", relief='raised',background="White")
-sampleHeading = Label(window, text="\nSample Downloaded NSE Bhav Copy:",background="White")
+heading = Label(window, text="BhavCopy Download Automation Settings", relief='raised', background="White")
+sampleHeading = Label(window, text="\nSample Downloaded NSE Bhav Copy:", background="White")
 treeframe = LabelFrame(window)
 browserFrame = LabelFrame(window)
 browserFrame.columnconfigure(index=0, weight=1)
 
 labelFilename = Label(browserFrame)
 labelFilename.configure(text=CheckOrignalFilePath())
-fileBrowserButton = Button(browserFrame, text='File Browser', command=BrowseFile,background="White")
+fileBrowserButton = Button(browserFrame, text='File Browser', command=BrowseFile, background="White")
 
 startupTrue = Checkbutton(window, text='Download On System Startup', variable=startupCheck, onvalue=1, offvalue=0,
                           background="White")
@@ -133,7 +134,7 @@ df_rows = Dataset.to_numpy().tolist()
 for row in df_rows:
     tv1.insert("", "end", values=row)
 
-exitButton = Button(window, text='Save and Exit', command=StartupFunctionAndExit,background="White")
+exitButton = Button(window, text='Save and Exit', command=StartupFunctionAndExit, background="White")
 
 # Color changes on hover from white to light gray
 changeOnHover(fileBrowserButton, "Light Gray", "White")

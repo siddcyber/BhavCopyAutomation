@@ -4,7 +4,7 @@ import os
 import requests
 from datetime import date, datetime, timedelta
 from zipfile import ZipFile
-
+import time
 # monday    -> friday   ->0
 # tuesday   -> monday   ->1
 # wednesday -> tuesday  ->2
@@ -47,18 +47,37 @@ zipname = str("cm" + nameDateYesterday.strftime("%d%b%Y").upper() + 'bhav.csv.zi
 
 URL2 = "https://archives.nseindia.com/content/historical/EQUITIES/" + \
       str(nameDateYesterday.strftime("%Y") + "/" + nameDateYesterday.strftime("%b").upper()) + '/' + zipname
+# Method one Simple for loop
+## add value while false if file still not downloaded
+# no_of_attempts = 5 # set number of attempts
+# for i in range (no_of_attempts):
+#     try:
+#         response = requests.get(URL2)  # download the data behind the URL
+#         open(zipname, "wb").write(response.content)  # Open the response into a new file
+#         # extract zip file to specified location
+#         with ZipFile(zipname, 'r') as zip_file:
+#             zip_file.extractall(path=path)
+#         os.remove(zipname)  # removes the downloaded zip file
+#         print("itworks")
+#     except (requests.exceptions.ConnectionError, FileNotFoundError):
+#         print("finally the error")
+#         time.sleep(3)
+#         continue
 
-
-try:
-    response = requests.get(URL2)  # download the data behind the URL
-    open(zipname, "wb").write(response.content)  # Open the response into a new file
-    # extract zip file to specified location
-    with ZipFile(zipname, 'r') as zip_file:
-        zip_file.extractall(path=path)
-    os.remove(zipname)  # removes the downloaded zip file
-    print("itworks")
-except (requests.exceptions.ConnectionError, FileNotFoundError):
-    print("maybe now")
-
-
-
+# method 2 effective but efficient? check add total no of iterations to go through
+def doSomething():
+    try:
+        response = requests.get(URL2)  # download the data behind the URL
+        open(zipname, "wb").write(response.content)  # Open the response into a new file
+        # extract zip file to specified location
+        with ZipFile(zipname, 'r') as zip_file:
+            zip_file.extractall(path=path)
+        os.remove(zipname)  # removes the downloaded zip file
+        print("itworks")
+    except (requests.exceptions.ConnectionError, FileNotFoundError):
+        print("finally the error")
+        #  retry the try part after some seconds
+        time.sleep(1)
+        # Try again
+        doSomething()
+doSomething()
