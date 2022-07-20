@@ -36,6 +36,7 @@ def CheckOrignalFilePath():
             orignalPath = str(file.readline())
     elif not os.path.exists(os.getcwd() + '\\' + 'BhavCopy_location.txt'):
         #  if file not present creates empty file and assigns orignal path as desktop
+#   if folder not present create folder
         with open(os.getcwd() + '\\' + 'BhavCopy_location.txt', 'w+') as file:
             orignalPath = winshell.desktop()
     file.close()
@@ -46,7 +47,7 @@ def BrowseFile():
     # opens file browser
     filename = filedialog.askdirectory(initialdir=str(CheckOrignalFilePath()), title="select the folder")
     labelFilename.configure(text=filename)  # reconfigures the Filename label with new location in GUI
-
+    #   if folder not present create folder
     newPath = open(os.getcwd() + '\\' + 'BhavCopy_location.txt', 'w')  # opens txt file in write mode
     newPath.truncate(0)  # erase all the contents of the file
     newPath.write(str(labelFilename.cget('text')))  # append the file with new location
