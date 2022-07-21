@@ -1,9 +1,0 @@
-# nsepy method
-# from nsepy.history import get_price_list
-today = date.today()  # today's date
-nameDateToday = datetime.today()  # today's date for file naming
-nameDateYesterday = nameDateToday - timedelta(days=1)  # Yesterday's date for file naming
-yesterday = today - timedelta(days=1)  # yesterday's date
-prises = get_price_list(dt=yesterday)  # gets latest Bhav NSE copy list
-# saving of file in CSV format with name
-prises.to_csv(os.path.join(path, 'cm' + nameDateYesterday.strftime("%d%b%Y") + 'bhav.csv'))
