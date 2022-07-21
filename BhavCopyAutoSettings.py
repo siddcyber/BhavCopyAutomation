@@ -36,7 +36,6 @@ def CheckOrignalFilePath():
             orignalPath = str(file.readline())
     elif not os.path.exists(os.getcwd() + '\\' + 'BhavCopy_location.txt'):
         #  if file not present creates empty file and assigns orignal path as desktop
-#   if folder not present create folder
         with open(os.getcwd() + '\\' + 'BhavCopy_location.txt', 'w+') as file:
             orignalPath = winshell.desktop()
     file.close()
