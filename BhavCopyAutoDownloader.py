@@ -5,7 +5,6 @@ import requests
 from datetime import date, datetime, timedelta
 from zipfile import ZipFile
 import time
-start = time.time()
 # monday    -> friday   ->0
 # tuesday   -> monday   ->1
 # wednesday -> tuesday  ->2
@@ -37,37 +36,16 @@ zipname = str("cm" + nameDateYesterday.strftime("%d%b%Y").upper() + 'bhav.csv.zi
 URL2 = "https://archives.nseindia.com/content/historical/EQUITIES/" + \
        str(nameDateYesterday.strftime("%Y") + "/" + nameDateYesterday.strftime("%b").upper()) + '/' + zipname
 
-# # main function to repeat until the file is downloaded, unzipped and delete the zip file
-# recursion method takes 0.63 to 0.17 seconds
-# def main():
-#     try:
-#         response = requests.get(URL2)  # download the data behind the URL
-#         open(zipname, "wb").write(response.content)  # Open the response into a new file
-#         # extract zip file to specified location
-#         with ZipFile(zipname, 'r') as zip_file:
-#             zip_file.extractall(path=path)
-#         os.remove(zipname)  # removes the downloaded zip file
-#         print("success")
-#     except (requests.exceptions.ConnectionError, FileNotFoundError):
-#         #  retry the try part after some seconds
-#         time.sleep(60)
-#         # Try again(recursion)
-#         main()
-# main()
-
+# main function to repeat until the file is downloaded, unzipped and delete the zip file
 # while true method takes 0.7 to 0.19 seconds
-# while True:
-#     try:
-#         response = requests.get(URL2)  # download the data behind the URL
-#         open(zipname, "wb").write(response.content)  # Open the response into a new file
-#         # extract zip file to specified location
-#         with ZipFile(zipname, 'r') as zip_file:
-#             zip_file.extractall(path=path)
-#         os.remove(zipname)  # removes the downloaded zip file
-#         print("success")
-#         break
-#     except (requests.exceptions.ConnectionError, FileNotFoundError):
-#         print("error, trying again in 10s")
-#         time.sleep(1)
-end = time.time()
-print("The time of execution of above program is :", end-start)
+while True:
+    try:
+        response = requests.get(URL2)  # download the data behind the URL
+        open(zipname, "wb").write(response.content)  # Open the response into a new file
+        # extract zip file to specified location
+        with ZipFile(zipname, 'r') as zip_file:
+            zip_file.extractall(path=path)
+        os.remove(zipname)  # removes the downloaded zip file
+        break
+    except (requests.exceptions.ConnectionError, FileNotFoundError):
+        time.sleep(10)
