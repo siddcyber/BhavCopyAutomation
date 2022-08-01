@@ -1,4 +1,4 @@
-# install pywin32, future, nsepy and winshell
+# install packages: pywin32, pandas, requests, future, and winshell
 
 from tkinter import filedialog, Label, Checkbutton, IntVar, Tk, Button, ttk, Scrollbar, LabelFrame
 import os.path
