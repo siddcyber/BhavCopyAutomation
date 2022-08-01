@@ -1,5 +1,4 @@
 # install packages: pywin32, pandas, requests, future, and winshell
-#  add try statement if bhavcopylocation not found, open BhavcopyAutoSettings and retry
 import os
 import requests
 from datetime import date, datetime, timedelta
