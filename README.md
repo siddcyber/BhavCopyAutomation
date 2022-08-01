@@ -2,7 +2,7 @@
 
 Automation tool for Downloading latest NSE Bhav Copy with GUI Settings
 
-Just use exe files Executables folder in case you do not want to go through the code.
+Just use exe files Executables folder in case you do not want to go through the code and open BhavCopyAutoDownloader.exe to start downloading the Latest NSE BhavCopy
 
 1. Packages used: Tkinter, pandas, requests, zipfile, os, pywin32, winshell, Time
 
@@ -30,3 +30,6 @@ Just use exe files Executables folder in case you do not want to go through the 
 
 
 9. If you Do not need the python scripts then delete and use only the exe files as they are the executable version of the python script
+
+
+10. If you want the program to start with startup then click on "download on system startup" in the BhavCopyAutoSettings.exe
