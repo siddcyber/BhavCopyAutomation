@@ -32,18 +32,12 @@ zipname = str("cm" + nameDateYesterday.strftime("%d%b%Y").upper() + 'bhav.csv.zi
 URL2 = "https://archives.nseindia.com/content/historical/EQUITIES/" + \
        str(nameDateYesterday.strftime("%Y") + "/" + nameDateYesterday.strftime("%b").upper()) + '/' + zipname
 
-# while true method takes 0.7 to 0.19 seconds
 while True:
-    # read the bhavcopy_location file for the save location of the NSE Bhavcopy
-    try:
-        with open((os.getcwd() + r"\BhavCopy_location.txt"), 'r') as file:
-            path = str(file.readline())
-    except (FileNotFoundError):
-        os.startfile(os.getcwd() + r"\BhavCopyAutoSettings.exe")
-        time.sleep(60)
-
     # main function to repeat until the file is downloaded, unzipped and delete the zip file
     try:
+        # read the bhavcopy_location file for the save location of the NSE Bhavcopy
+        with open((os.getcwd() + r"\BhavCopy_location.txt"), 'r') as file:
+            path = str(file.readline())
         response = requests.get(URL2)  # download the data behind the URL
         open(zipname, "wb").write(response.content)  # Open the response into a new file
         # extract zip file to specified location
@@ -51,5 +45,13 @@ while True:
             zip_file.extractall(path=path)
         os.remove(zipname)  # removes the downloaded zip file
         break
-    except (requests.exceptions.ConnectionError, FileNotFoundError, NameError):
+    except requests.exceptions.ConnectionError:
+        print("preSleepConnectionErrorCatchSuccess")
         time.sleep(10)
+        print("postSleepConnectionErrorCatchSuccess")
+
+    except(FileNotFoundError, NameError):
+        print(r"preSleepNameError/FileNotFoundErrorCatchSuccess")
+        os.startfile(os.getcwd() + r"\BhavCopyAutoSettings.exe")
+        time.sleep(60)
+        print(r"postSleepNameError/FileNotFoundErrorCatchSuccess")
