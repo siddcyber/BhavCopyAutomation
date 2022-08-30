@@ -1,4 +1,5 @@
 # install packages: pywin32, pandas, requests, future, and winshell
+
 import os
 import requests
 from datetime import date, datetime, timedelta
@@ -13,23 +14,22 @@ import time
 # saturday  -> friday   ->5
 # sunday    -> friday   ->6
 today = date.today()  # today's date
-nameDateToday = datetime.today()  # today's date for file naming
 
 if today.weekday() == 6:
-    nameDateYesterday = nameDateToday - timedelta(days=2)  # Friday's date for file naming
+    today = today - timedelta(days=2)  # Friday's date for file naming
 
 elif today.weekday() == 0:
-    nameDateYesterday = nameDateToday - timedelta(days=3)  # Friday's date for file naming
+    today = today - timedelta(days=3)  # Friday's date for file naming
 
 else:
-    nameDateYesterday = nameDateToday - timedelta(days=1)  # Yesterday's date for file naming
+    today = today - timedelta(days=1)  # Yesterday's date for file naming
 
 #  Name of the zip file to be downloaded
-zipname = str("cm" + nameDateYesterday.strftime("%d%b%Y").upper() + 'bhav.csv.zip')
+zipname = str("cm" + today.strftime("%d%b%Y").upper() + 'bhav.csv.zip')
 
 # Url of the File to be Downloaded
 URL2 = "https://archives.nseindia.com/content/historical/EQUITIES/" + \
-       str(nameDateYesterday.strftime("%Y") + "/" + nameDateYesterday.strftime("%b").upper()) + '/' + zipname
+       str(today.strftime("%Y") + "/" + today.strftime("%b").upper()) + '/' + zipname
 
 while True:
     # main function to repeat until the file is downloaded, unzipped and delete the zip file
