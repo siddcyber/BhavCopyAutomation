@@ -2,11 +2,12 @@
 
 import os
 import requests
-from datetime import date, datetime, timedelta
+from datetime import date, timedelta
 from zipfile import ZipFile, BadZipfile
 import time
 from tkcalendar import DateEntry
-from tkinter import filedialog, Label, Radiobutton, BooleanVar, Tk, Button, ttk, Scrollbar, LabelFrame
+from tkinter import filedialog, Label, Radiobutton, BooleanVar, Tk, Button, ttk, Scrollbar, LabelFrame, HORIZONTAL, \
+    StringVar
 import os.path
 import pandas as pd
 
@@ -18,6 +19,7 @@ import pandas as pd
 # friday    -> thursday ->4
 # saturday  -> friday   ->5
 # sunday    -> friday   ->6
+
 def extractAndDelete(filename, url):
     while True:
         # main function to repeat until the file is downloaded, unzipped and delete the zip file
@@ -52,12 +54,28 @@ def checkWeekend(day):
     return weekend
 
 
+def rangeProgressbar():
+    bar.grid(row=2, column=0, columnspan=9, sticky='EW')
+    barStatus.grid(row=3, column=0, columnspan=9, sticky='EW')
+
+
+def rangeProgressbarUpdate(total,text):
+    time.sleep(0.05)
+    bar['value'] += (1/total)*100
+    statusLabel.set(text)
+    window.update_idletasks()
+
+
 def downloadRange(start, end):
     deltaDate = end - start  # returns deltatime
+    deltaDate = deltaDate.days + 1  # returns deltatime
+
     print('start')
-    for i in range(deltaDate.days + 1):
+    rangeProgressbar()
+    for i in range(deltaDate):
         currentDay = start + timedelta(days=i)
         if checkWeekend(currentDay):
+            rangeProgressbarUpdate(deltaDate,'Weekend')
             pass
         else:
             #  Name of the zip file to be downloaded
@@ -68,11 +86,14 @@ def downloadRange(start, end):
             try:
                 print('start function')
                 extractAndDelete(zipname, URL2)
+                rangeProgressbarUpdate(deltaDate,zipname + ' Downloaded')
             except BadZipfile:
                 print('BadZipfile')
                 os.remove(zipname)
+                rangeProgressbarUpdate(deltaDate,zipname + ' badzipfile')
                 continue
     print('done')
+    rangeProgressbarUpdate(deltaDate,"Download Complete")
 
 
 # function to change properties of button on hover
@@ -145,18 +166,18 @@ def confrirmAndDownload():
 window = Tk()
 endDateCheck = BooleanVar()
 endDateCheck.set(False)
+statusLabel = StringVar()
 window.geometry('700x360')
 window.config(background="White")
 
 window.title("BhavCopy Range Downloader")
 window.iconbitmap('BhavCopyLogo.ico')
 
-
 heading = Label(window, text="BhavCopy Range Downloader", relief='raised', background="White")
 sampleHeading = Label(window, text="\nSample Downloaded NSE Bhav Copy:", background="White")
 
-browserFrame = LabelFrame(window,background = 'White')
-labelFilename = Label(browserFrame,background = 'White')
+browserFrame = LabelFrame(window, background='White')
+labelFilename = Label(browserFrame, background='White')
 labelFilename.configure(text=CheckOrignalFilePath())
 fileBrowserButton = Button(browserFrame, text='File Browser', command=BrowseFile, background="White")
 
@@ -169,8 +190,10 @@ calEnd = DateEntry(rangeFrame, selectmode='day', year=today.year, month=today.mo
 rangeFrameStartDate = Label(rangeFrame, text="select the start date: ", background='White')
 rangeFrameEndDate = Label(rangeFrame, text="select the End date:", background='White')
 rangeFrameButton = Button(rangeFrame, text="Confirm\nAnd\nDownload", command=confrirmAndDownload, background='White')
-rangeFrameRadioEnd = Radiobutton(rangeFrame, text="End Date",background = 'White',variable =endDateCheck,value=False)
-rangeFrameRadioToday =Radiobutton(rangeFrame, text="Today",background = 'White',variable =endDateCheck,value=True)
+rangeFrameRadioEnd = Radiobutton(rangeFrame, text="End Date", background='White', variable=endDateCheck, value=False)
+rangeFrameRadioToday = Radiobutton(rangeFrame, text="Today", background='White', variable=endDateCheck, value=True)
+bar = ttk.Progressbar(rangeFrame, orient=HORIZONTAL, mode='determinate')
+barStatus = Label(rangeFrame,textvariable=statusLabel, background='White')
 
 # selecting file as a sample Downloaded Bhav Copy (first 5 entries)
 treeframe = LabelFrame(window)
@@ -210,10 +233,10 @@ browserFrame.grid(row=4, column=0, sticky='EW')
 labelFilename.grid(row=0, column=0, sticky='W')
 fileBrowserButton.grid(row=0, column=1, sticky='E')
 
-rangeFrame.grid(row=5,column=0,sticky='NSEW')
-rangeFrameLabel.grid(row=0,column=0,columnspan=8,sticky='NSEW')
-rangeFrameStartDate.grid(row=1,column=0,sticky='W')
-cal.grid(row=1,column=1,sticky='EW')
+rangeFrame.grid(row=5, column=0, sticky='NSEW')
+rangeFrameLabel.grid(row=0, column=0, columnspan=8, sticky='NSEW')
+rangeFrameStartDate.grid(row=1, column=0, sticky='W')
+cal.grid(row=1, column=1, sticky='EW')
 rangeFrameEndDate.grid(row=1, column=2, sticky='NSEW')
 rangeFrameRadioEnd.grid(row=1, column=3, sticky='NSEW')
 calEnd.grid(row=1, column=4, sticky='EW')
