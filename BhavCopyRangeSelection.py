@@ -10,6 +10,7 @@ from tkinter import filedialog, Label, Radiobutton, BooleanVar, Tk, Button, ttk,
     StringVar
 import os.path
 import pandas as pd
+import threading
 
 
 # monday    -> friday   ->0
@@ -30,21 +31,13 @@ def extractAndDelete(filename, url):
             response = requests.get(url)  # download the data behind the URL
             open(filename, "wb").write(response.content)  # Open the response into a new file
             # extract zip file to specified location
-            print('file extraction start')
             with ZipFile(filename, 'r') as zip_file:
                 zip_file.extractall(path=path)
-                print('file extracted')
-                print('sleeping for 0.1 second')
-                time.sleep(0.1)
-                print('complete')
-            print('deleting file')
+                time.sleep(0.05)
             os.remove(filename)  # removes the downloaded zip file
-            print('file deleted')
             break
         except requests.exceptions.ConnectionError:
-            print("preSleepConnectionErrorCatchSuccess")
             time.sleep(10)
-            print("postSleepConnectionErrorCatchSuccess")
 
 
 def checkWeekend(day):
@@ -56,7 +49,7 @@ def checkWeekend(day):
 
 def rangeProgressbar():
     rangeFrame.grid_forget()
-    barFrame.grid(row=6,column=0,sticky='NSEW')
+    barFrame.grid(row=6, column=0, sticky='NSEW')
     bar.grid(row=0, column=0, columnspan=9, sticky='EW')
     barStatus.grid(row=1, column=0, columnspan=9, sticky='EW')
 
@@ -71,8 +64,6 @@ def rangeProgressbarUpdate(total, text):
 def downloadRange(start, end):
     deltaDate = end - start  # returns deltatime
     deltaDate = deltaDate.days + 1  # returns deltatime
-
-    print('start')
     rangeProgressbar()
     for i in range(deltaDate):
         currentDay = start + timedelta(days=i)
@@ -86,15 +77,12 @@ def downloadRange(start, end):
             URL2 = "https://www1.nseindia.com/content/historical/EQUITIES/" + \
                    str(currentDay.strftime("%Y") + "/" + currentDay.strftime("%b").upper()) + '/' + zipname
             try:
-                print('start function')
                 extractAndDelete(zipname, URL2)
                 rangeProgressbarUpdate(deltaDate, zipname + ' Downloaded')
             except BadZipfile:
-                print('BadZipfile')
                 os.remove(zipname)
                 rangeProgressbarUpdate(deltaDate, zipname + ' badzipfile')
                 continue
-    print('done')
     rangeProgressbarUpdate(deltaDate, "Download Complete")
 
 
@@ -179,12 +167,13 @@ cal = DateEntry(rangeFrame, selectmode='day', year=today.year, month=today.month
 calEnd = DateEntry(rangeFrame, selectmode='day', year=today.year, month=today.month, day=today.day)
 rangeFrameStartDate = Label(rangeFrame, text="select the start date: ", background='White')
 rangeFrameEndDate = Label(rangeFrame, text="select the End date:", background='White')
-rangeFrameButton = Button(rangeFrame, text="Confirm\nAnd\nDownload", command=confrirmAndDownload, background='White')
 rangeFrameRadioEnd = Radiobutton(rangeFrame, text="End Date", background='White', variable=endDateCheck, value=False)
 rangeFrameRadioToday = Radiobutton(rangeFrame, text="Today", background='White', variable=endDateCheck, value=True)
+rangeFrameButton = Button(rangeFrame, text="Confirm And\nDownload",
+                          command=threading.Thread(target=confrirmAndDownload).start, background='White')
 
 # progressbar
-barFrame = LabelFrame(window,background='White')
+barFrame = LabelFrame(window, background='White')
 bar = ttk.Progressbar(barFrame, orient=HORIZONTAL, mode='determinate')
 barStatus = Label(barFrame, textvariable=statusLabel, background='White')
 
@@ -238,13 +227,13 @@ fileBrowserButton.grid(row=0, column=1, sticky='E')
 
 rangeFrameLabel.grid(row=5, column=0, columnspan=8, sticky='NSEW')
 rangeFrame.grid(row=6, column=0, sticky='NSEW')
-rangeFrameStartDate.grid(row=1, column=0, sticky='W', padx=5)
+rangeFrameStartDate.grid(row=1, column=0, sticky='EW', padx=5)
 cal.grid(row=1, column=1, sticky='EW', padx=5)
-rangeFrameEndDate.grid(row=1, column=2, sticky='NSEW', padx=5)
-rangeFrameRadioEnd.grid(row=1, column=3, sticky='NSEW', padx=5)
+rangeFrameEndDate.grid(row=1, column=2, sticky='EW', padx=5)
+rangeFrameRadioEnd.grid(row=1, column=3, sticky='EW', padx=5)
 calEnd.grid(row=1, column=4, sticky='EW', padx=5)
-rangeFrameRadioToday.grid(row=1, column=5, sticky='E', padx=5)
-rangeFrameButton.grid(row=1, column=6, sticky='E')
+rangeFrameRadioToday.grid(row=1, column=5, sticky='EW', padx=5)
+rangeFrameButton.grid(row=1, column=6, sticky='EW')
 
 exitButton.grid(row=7, column=0, sticky='NSEW')
 
