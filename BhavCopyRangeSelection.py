@@ -55,13 +55,15 @@ def checkWeekend(day):
 
 
 def rangeProgressbar():
-    bar.grid(row=2, column=0, columnspan=9, sticky='EW')
-    barStatus.grid(row=3, column=0, columnspan=9, sticky='EW')
+    rangeFrame.grid_forget()
+    barFrame.grid(row=6,column=0,sticky='NSEW')
+    bar.grid(row=0, column=0, columnspan=9, sticky='EW')
+    barStatus.grid(row=1, column=0, columnspan=9, sticky='EW')
 
 
-def rangeProgressbarUpdate(total,text):
+def rangeProgressbarUpdate(total, text):
     time.sleep(0.05)
-    bar['value'] += (1/total)*100
+    bar['value'] += (1 / total) * 100
     statusLabel.set(text)
     window.update_idletasks()
 
@@ -75,7 +77,7 @@ def downloadRange(start, end):
     for i in range(deltaDate):
         currentDay = start + timedelta(days=i)
         if checkWeekend(currentDay):
-            rangeProgressbarUpdate(deltaDate,'Weekend')
+            rangeProgressbarUpdate(deltaDate, 'Weekend')
             pass
         else:
             #  Name of the zip file to be downloaded
@@ -86,14 +88,14 @@ def downloadRange(start, end):
             try:
                 print('start function')
                 extractAndDelete(zipname, URL2)
-                rangeProgressbarUpdate(deltaDate,zipname + ' Downloaded')
+                rangeProgressbarUpdate(deltaDate, zipname + ' Downloaded')
             except BadZipfile:
                 print('BadZipfile')
                 os.remove(zipname)
-                rangeProgressbarUpdate(deltaDate,zipname + ' badzipfile')
+                rangeProgressbarUpdate(deltaDate, zipname + ' badzipfile')
                 continue
     print('done')
-    rangeProgressbarUpdate(deltaDate,"Download Complete")
+    rangeProgressbarUpdate(deltaDate, "Download Complete")
 
 
 # function to change properties of button on hover
@@ -103,18 +105,6 @@ class ChangeOnHover:
         button.bind("<Enter>", func=lambda e: button.config(background=colorOnHover))
         # background color on leaving widget
         button.bind("<Leave>", func=lambda e: button.config(background=colorOnLeave))
-
-
-class WidgetConfig:
-    def __init__(self, widget, row, col):
-        if row == 'row':
-            widget.rowconfigure(index=3, weight=1)
-        else:
-            pass
-        if col == 'col':
-            widget.columnconfigure(index=0, weight=1)
-        else:
-            pass
 
 
 # function to check if BhavCopy_location.txt file is located or  not
@@ -182,8 +172,8 @@ labelFilename.configure(text=CheckOrignalFilePath())
 fileBrowserButton = Button(browserFrame, text='File Browser', command=BrowseFile, background="White")
 
 # frame with all the widgets relating to range downloading
+rangeFrameLabel = Label(window, text='Select the range to be Downloaded', background='White')
 rangeFrame = LabelFrame(window, background='White')
-rangeFrameLabel = Label(rangeFrame, text='Select the range to be Downloaded', background='White')
 today = date.today()
 cal = DateEntry(rangeFrame, selectmode='day', year=today.year, month=today.month, day=today.day)
 calEnd = DateEntry(rangeFrame, selectmode='day', year=today.year, month=today.month, day=today.day)
@@ -192,8 +182,11 @@ rangeFrameEndDate = Label(rangeFrame, text="select the End date:", background='W
 rangeFrameButton = Button(rangeFrame, text="Confirm\nAnd\nDownload", command=confrirmAndDownload, background='White')
 rangeFrameRadioEnd = Radiobutton(rangeFrame, text="End Date", background='White', variable=endDateCheck, value=False)
 rangeFrameRadioToday = Radiobutton(rangeFrame, text="Today", background='White', variable=endDateCheck, value=True)
-bar = ttk.Progressbar(rangeFrame, orient=HORIZONTAL, mode='determinate')
-barStatus = Label(rangeFrame,textvariable=statusLabel, background='White')
+
+# progressbar
+barFrame = LabelFrame(window,background='White')
+bar = ttk.Progressbar(barFrame, orient=HORIZONTAL, mode='determinate')
+barStatus = Label(barFrame, textvariable=statusLabel, background='White')
 
 # selecting file as a sample Downloaded Bhav Copy (first 5 entries)
 treeframe = LabelFrame(window)
@@ -220,9 +213,19 @@ ChangeOnHover(fileBrowserButton, "Light Gray", "White")
 ChangeOnHover(exitButton, "Light Gray", "White")
 ChangeOnHover(rangeFrameButton, "Light Gray", "White")
 # widget row/column Config
-WidgetConfig(window, "row", "col")
-WidgetConfig(browserFrame, '', 'col')
-WidgetConfig(rangeFrame, 'row', 'col')
+window.rowconfigure(index=3, weight=1)
+window.columnconfigure(index=0, weight=1)
+browserFrame.columnconfigure(index=0, weight=1)
+rangeFrame.columnconfigure(index=0, weight=1)
+rangeFrame.columnconfigure(index=1, weight=1)
+rangeFrame.columnconfigure(index=2, weight=1)
+rangeFrame.columnconfigure(index=3, weight=1)
+rangeFrame.columnconfigure(index=4, weight=1)
+rangeFrame.columnconfigure(index=5, weight=1)
+rangeFrame.columnconfigure(index=6, weight=1)
+barFrame.rowconfigure(index=0, weight=1)
+barFrame.rowconfigure(index=1, weight=1)
+barFrame.columnconfigure(index=0, weight=1)
 
 # change to grid
 heading.grid(row=0, column=0, sticky='NSEW')
@@ -233,14 +236,14 @@ browserFrame.grid(row=4, column=0, sticky='EW')
 labelFilename.grid(row=0, column=0, sticky='W')
 fileBrowserButton.grid(row=0, column=1, sticky='E')
 
-rangeFrame.grid(row=5, column=0, sticky='NSEW')
-rangeFrameLabel.grid(row=0, column=0, columnspan=8, sticky='NSEW')
-rangeFrameStartDate.grid(row=1, column=0, sticky='W')
-cal.grid(row=1, column=1, sticky='EW')
-rangeFrameEndDate.grid(row=1, column=2, sticky='NSEW')
-rangeFrameRadioEnd.grid(row=1, column=3, sticky='NSEW')
-calEnd.grid(row=1, column=4, sticky='EW')
-rangeFrameRadioToday.grid(row=1, column=5, sticky='E')
+rangeFrameLabel.grid(row=5, column=0, columnspan=8, sticky='NSEW')
+rangeFrame.grid(row=6, column=0, sticky='NSEW')
+rangeFrameStartDate.grid(row=1, column=0, sticky='W', padx=5)
+cal.grid(row=1, column=1, sticky='EW', padx=5)
+rangeFrameEndDate.grid(row=1, column=2, sticky='NSEW', padx=5)
+rangeFrameRadioEnd.grid(row=1, column=3, sticky='NSEW', padx=5)
+calEnd.grid(row=1, column=4, sticky='EW', padx=5)
+rangeFrameRadioToday.grid(row=1, column=5, sticky='E', padx=5)
 rangeFrameButton.grid(row=1, column=6, sticky='E')
 
 exitButton.grid(row=7, column=0, sticky='NSEW')
