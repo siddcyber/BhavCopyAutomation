@@ -1,5 +1,4 @@
 # install packages: pywin32, pandas, requests, future, tkcalendar and winshell
-
 import os
 import requests
 from datetime import date, timedelta
@@ -11,6 +10,9 @@ from tkinter import filedialog, Label, Radiobutton, BooleanVar, Tk, Button, ttk,
 import os.path
 import pandas as pd
 import threading
+from HolidayParsing import *
+listHolidays = holidaylist().dflist
+print(listHolidays)
 
 
 # monday    -> friday   ->0
