@@ -1,4 +1,3 @@
-from bs4 import BeautifulSoup
 import requests
 import pandas as pd
 
@@ -16,8 +15,7 @@ df = df['CM']
 df2 = pd.DataFrame()
 for row in range(len(df)):
     df2 = df2.append(df.loc[row], ignore_index=True)
-print(df2.to_string())
-print(df2['tradingDate'].to_string())
+holidaylist = df2['tradingDate'].tolist()
 # print(df.keys())
 # print(df.index.values)
 # print(df.loc[0])
