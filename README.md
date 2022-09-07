@@ -33,3 +33,7 @@ Just use exe files Executables folder in case you do not want to go through the 
 
 
 10. If you want the program to start with startup then click on "download on system startup" in the BhavCopyAutoSettings.exe
+ 
+
+update:
+1. new function to search the internet and skip past the holidays in the year implemented.
