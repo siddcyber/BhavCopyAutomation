@@ -11,7 +11,7 @@
 
 import os
 from datetime import date, datetime, timedelta
-from zipfile import ZipFile
+from zipfile import ZipFile, BadZipfile
 import time
 import requests
 import pandas as pd
@@ -52,14 +52,14 @@ def checkholiday(day):
 
 today = date.today()  # today's date
 
-if today.weekday() == 6:
-    today = today - timedelta(days=2)  # Friday's date for file naming
-
-elif today.weekday() == 0:
-    today = today - timedelta(days=3)  # Friday's date for file naming
-
-else:
-    today = today - timedelta(days=1)  # Yesterday's date for file naming
+# if today.weekday() == 6:
+#     today = today - timedelta(days=2)  # Friday's date for file naming
+#
+# elif today.weekday() == 0:
+#     today = today - timedelta(days=3)  # Friday's date for file naming
+#
+# else:
+#     today = today - timedelta(days=1)  # Yesterday's date for file naming
 
 #  Name of the zip file to be downloaded
 zipname = str("cm" + today.strftime("%d%b%Y").upper() + 'bhav.csv.zip')
@@ -80,6 +80,11 @@ while True:
         with ZipFile(zipname, 'r') as zip_file:
             zip_file.extractall(path=path)
         os.remove(zipname)  # removes the downloaded zip file
+        break
+    except BadZipfile:
+        print('badzip')
+        os.remove(zipname)
+        print('remove successful')
         break
     except requests.exceptions.ConnectionError:
         print("preSleepConnectionErrorCatchSuccess")
