@@ -37,3 +37,4 @@ Just use exe files Executables folder in case you do not want to go through the 
 
 update:
 1. new function to search the internet and skip past the holidays in the year implemented.
+2. the previous method was inefficient, a change in website and adding badZipFile exception handling fixed the problem with holidays 
